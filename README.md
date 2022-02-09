@@ -8,8 +8,8 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 
 
-
-# C2 Manual
+# Usage Manuals
+**C2 Manual**
 
     targets                 --> Prints Active Sessions
     session *session num*   --> Will Connect To Session (background to return)
@@ -21,7 +21,7 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 
 
-# Session Manual
+**Session Manual**
 
     quit                                --> Quit Session With The Target
     clear                               --> Clear The Screen
