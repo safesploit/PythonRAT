@@ -15,7 +15,7 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 - Upload files to target
 - C2 allows control of multiple target sessions w/ background session
 - Issue a _sendall *command*_ to every active session
-- Persistence by creating a registry entry
+- Persistence by creating a registry entry (Windows)
 - Screenshot of the target's screen which is sent to server
 - Remote shutdown of the backdoor _(executable is NOT safely removed)_
 
