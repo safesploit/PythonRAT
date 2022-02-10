@@ -29,7 +29,6 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
     exit                    --> Quit ALL Active Sessions and Closes C2 Server!!
     kill *session num*      --> Issue 'quit' To Specified Target Session
     sendall *command*       --> Sends The *command* To ALL Active Sessions (sendall notepad)
-    remove_backdoor         --> Removes backdoor from target
 
 
 
