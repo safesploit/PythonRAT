@@ -192,7 +192,8 @@ This will produce an SFX archive which looks like an image
 While inspecting the file will reveal it is an executable the file extension _.exe_ is concealed.
 Furthermore, if viewed from the Desktop cannot be differentiated between a 'real' image.
 
-<img width="842" alt="image8" src="https://user-images.githubusercontent.com/10171446/153408539-972eba00-ca38-4cfc-be3b-556cf9ae74c7.PNG">
+![image8](https://user-images.githubusercontent.com/10171446/153618884-601e9a7f-9bda-4fd5-a5a0-9808053160c5.PNG)
+
 
 
 Once opened the SFX archive will open the image file inside the archive and the malware will execute after.
