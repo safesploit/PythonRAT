@@ -88,6 +88,7 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
     wine python.exe -m pip install  pyinstaller
                                     requests
                                     pyautogui
+				    pynput
 
 
 # Backdoor Compilation and Obfuscation for Windows
