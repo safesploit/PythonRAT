@@ -8,9 +8,27 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 
 ## Table of Contents  
-[Features](#Features)  
-
-<a name="Features"/>
+- [Features](#features)
+- [Usage Manuals](#usage-manuals)
+  * [C2 Manual](#c2-manual)
+  * [Session Manual](#session-manual)
+- [Wine and Pyinstaller (Win version) Installation on Linux](#wine-and-pyinstaller--win-version--installation-on-linux)
+  * [Environment Setup](#environment-setup)
+  * [Installing Dependencies](#installing-dependencies)
+- [Backdoor Compilation and Obfuscation for Windows](#backdoor-compilation-and-obfuscation-for-windows)
+  * [Compile to Executable using Pyinstaller Linux](#compile-to-executable-using-pyinstaller-linux)
+  * [Compile to Executable using Pyinstaller (Win) under Wine](#compile-to-executable-using-pyinstaller--win--under-wine)
+  * [Obfuscation using SFX Archive (Theory)](#obfuscation-using-sfx-archive--theory-)
+    + [NOTE: SFX Archive](#note--sfx-archive)
+  * [Creating SFX Archive](#creating-sfx-archive)
+  * [Creating SFX Archive - Visual](#creating-sfx-archive---visual)
+  * [Task Manager](#task-manager)
+- [Preview Images](#preview-images)
+  * [Target Connection to C2 Server](#target-Connection-to-c2-server)
+  * [Interacting with Session](#interacting-with-session)
+  * [Test Commands on Target](#test-commands-on-target)
+  * [Session Options](#session-options)
+  * [Backgrounding and Killing Session](#backgrounding-and-killing-session)
 
 # Features
 
@@ -29,7 +47,7 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 
 # Usage Manuals
-**C2 Manual**
+## C2 Manual
 
     targets                 --> Prints Active Sessions
     session *session num*   --> Will Connect To Session (background to return)
@@ -40,7 +58,7 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 
 
-**Session Manual**
+## Session Manual
 
     quit                                --> Quit Session With The Target
     clear                               --> Clear The Screen
@@ -64,7 +82,7 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
 
-**Environment Setup**
+## Environment Setup
 
 ┌──(root💀kali)-[~/]
 
@@ -78,7 +96,7 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
     sudo wine msiexec -i ~/python-2.7.14.msi #x86 arch
     
     
-**Installing Dependencies**
+## Installing Dependencies
 
 ┌──(root💀kali)-[~/.wine/drive_c]
 
@@ -93,13 +111,13 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
 
 # Backdoor Compilation and Obfuscation for Windows
 
-**Compile to Executable using Pyinstaller Linux**
+## Compile to Executable using Pyinstaller Linux
 
     $ pyinstaller --onefile --noconsole backdoor.py
 
 or,
 
-**Compile to Executable using Pyinstaller (Win) under Wine**
+## Compile to Executable using Pyinstaller (Win) under Wine
 
     # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole ~/backdoor.py
     
@@ -110,7 +128,7 @@ or,
 This will produce _./dist/backdoor.exe_
 
 
-**Obfuscation using SFX Archive (Theory)**
+## Obfuscation using SFX Archive (Theory)
 
 The executable _backdoor.exe_ will be made to look like an image (jpg) file.
 By default Windows does not show file extensions (e.g. backdoor.exe will show in Windows Explorer as backdoor).
@@ -121,7 +139,7 @@ Making the executable appear to be an image.
 
 Of course this same method could be applied to audio, document or video file using an appopriate icon.
 
-**NOTE: SFX Archive**
+### NOTE: SFX Archive
 
 SFX archive is not the only method of obfuscating the executable.
 We can when compiling using _Pyinstaller_ add the argument _--add-data "/root/wallpaper.jpg;."_ with
@@ -131,7 +149,7 @@ _--icon ~/wallpaper.ico_.
     # mv ./dist/_backdoor.exe_ ./dist/_wallpaper.jpg.exe_
 
 
-**Creating SFX Archive**
+## Creating SFX Archive
 
 WinRAR > Add To Archive (image.jpg and backdoor.exe)
 
@@ -161,7 +179,7 @@ Rename archive to: _image.jpg.exe_
 
 
 
-**Creating SFX Archive - Visual**
+## Creating SFX Archive - Visual
 
 https://user-images.githubusercontent.com/10171446/153578069-851d3896-67d0-465b-ad92-267ad21504ee.mp4
 
@@ -179,33 +197,33 @@ Once opened the SFX archive will open the image file inside the archive and the 
 Due to _--noconsole_ argument in _Pyinstaller_, no window will be rendered.
 
 
-**Task Manager**
+## Task Manager
 
 The _backdoor.exe_ process can be seen in Task Manager and ended there if necessary.
 
 # Preview Images
 
-**Target connection to C2 Server**
+## Target Connection to C2 Server
 
 ![Screenshot_2022-02-10_06-16-22](https://user-images.githubusercontent.com/10171446/153403206-4ce3dc23-4c1a-41b6-a715-2e2021d965ce.png)
 
 
-**Interacting with Session**
+## Interacting with Session
 
 ![Screenshot_2022-02-10_06-17-20](https://user-images.githubusercontent.com/10171446/153403283-3df77fd8-2cbe-4990-b82f-d847bdde3bee.png)
 
 
-**Test Commands on Target**
+## Test Commands on Target
 
 ![Screenshot_2022-02-10_06-22-48](https://user-images.githubusercontent.com/10171446/153403427-058ebe8a-36d8-465c-8386-7a55cea1641b.png)
 
 
-**Session Options**
+## Session Options
 
 ![Screenshot_2022-02-10_06-23-21](https://user-images.githubusercontent.com/10171446/153403579-3b090b00-2dec-4c33-a94d-020eb2b0d2b4.png)
 
 
-**Backgrounding and Killing Session**
+## Backgrounding and Killing Session
 
 ![Screenshot_2022-02-10_06-25-04](https://user-images.githubusercontent.com/10171446/153403973-d9757c68-4ca2-405f-ae13-a0ca0666bfcc.png)
 
