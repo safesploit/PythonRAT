@@ -7,6 +7,11 @@
 PythonRAT is a Command and Control (C2) server which can control multiple machines running the Remote Administration Trojan (RAT) forming a botnet cluster which was written in Python3. 
 
 
+## Table of Contents  
+[Features](#Features)  
+
+<a name="Features"/>
+
 # Features
 
 - Keylogger written as a class
