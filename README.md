@@ -7,8 +7,23 @@
 PythonRAT is a Command and Control (C2) server which can control multiple machines running the Remote Administration Trojan (RAT) forming a botnet cluster which was written in Python3. 
 
 
+# Features
+
+- Keylogger written as a class
+- Keylogger can be started and stopped remote with options to _dump_ or _overwrite_ the log file
+- Check privilege level (Administrator/User)
+- Download files from target
+- Download files from specified URL
+- Upload files to target
+- C2 allows control of multiple target sessions w/ background session
+- Issue a _sendall *command*_ to every active session
+- Persistence by creating a registry entry (Windows)
+- Spawn other programs
+- Screenshot of the target's screen which is sent to server
+- Remote shutdown of the backdoor _(executable is NOT safely removed)_
+
+
 ## Table of Contents  
-- [Features](#features)
 - [Usage Manuals](#usage-manuals)
   * [C2 Manual](#c2-manual)
   * [Session Manual](#session-manual)
@@ -29,21 +44,6 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
   * [Test Commands on Target](#test-commands-on-target)
   * [Session Options](#session-options)
   * [Backgrounding and Killing Session](#backgrounding-and-killing-session)
-
-# Features
-
-- Keylogger written as a class
-- Keylogger can be started and stopped remote with options to _dump_ or _overwrite_ the log file
-- Check privilege level (Administrator/User)
-- Download files from target
-- Download files from specified URL
-- Upload files to target
-- C2 allows control of multiple target sessions w/ background session
-- Issue a _sendall *command*_ to every active session
-- Persistence by creating a registry entry (Windows)
-- Spawn other programs
-- Screenshot of the target's screen which is sent to server
-- Remote shutdown of the backdoor _(executable is NOT safely removed)_
 
 
 # Usage Manuals
