@@ -81,9 +81,15 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
 
 # Backdoor Compilation and Obfuscation for Windows
 
-**Compile to Executable using Pyinstaller**
+**Compile to Executable using Pyinstaller Linux**
 
     $ pyinstaller --onefile --noconsole backdoor.py
+
+or,
+
+**Compile to Executable using Pyinstaller (Win) under Wine**
+
+    # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole ~/backdoor.py
     
 This will produce _./dist/backdoor.exe_
 
@@ -124,6 +130,12 @@ Rename archive to: _image.jpg.exe_
 			
 	**Text and icon**
 		Load SFX icon from the file (image ICO)
+
+
+
+**Creating SFX Archive - Visual**
+
+https://user-images.githubusercontent.com/10171446/153578069-851d3896-67d0-465b-ad92-267ad21504ee.mp4
 
 
 This will produce an SFX archive which looks like an image
