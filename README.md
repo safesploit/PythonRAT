@@ -16,11 +16,14 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 - Keylogger written as a class
 - Keylogger can be started and stopped remote with options to _dump_ or _overwrite_ the log file
+- Check privilege level (Administrator/User)
 - Download files from target
+- Download files from specified URL
 - Upload files to target
 - C2 allows control of multiple target sessions w/ background session
 - Issue a _sendall *command*_ to every active session
 - Persistence by creating a registry entry (Windows)
+- Spawn other programs
 - Screenshot of the target's screen which is sent to server
 - Remote shutdown of the backdoor _(executable is NOT safely removed)_
 
