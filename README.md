@@ -44,7 +44,8 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
     keylog_start                        --> Start The Keylogger
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
-    persistence *RegName* *filename*    --> Create Persistence In Registry
+    persistence *RegName* *filename*    --> Create Persistence In Registry (Windows)
+    check                               --> Check If Has Administrator Privileges (Windows)
     screenshot                          --> Takes screenshot and sends to server ./screenshots/
     remove_backdoor                     --> Removes backdoor from target!!!
 
