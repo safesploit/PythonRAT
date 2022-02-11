@@ -1,4 +1,6 @@
 This file should contain checksums/SHA256 which are GPG signed.
 
+80e67165a520c256325642aa5ad0c6636cea38344b8874757606dfa5ad59d23a  backdoor/backdoor.py
+a2da96a060efdb37db4873f20dbeaef8a3ad02475a4c10faa2d7444b6f35e46e  backdoor/keylogger.py
 e265734c5a74375a53417993aa1fb3b436b6ae35ecbe10dc4c181e103db9ad6e  c2.py
 defbfe4b6aa4d743209956a6d0c21456a62d5f0bdbcab19c3bfb19727693539b  malware_128x128.ico
