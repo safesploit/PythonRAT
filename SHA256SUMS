@@ -1,10 +1,27 @@
-This file should contain checksums/SHA256 which are GPG signed.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
 
 80e67165a520c256325642aa5ad0c6636cea38344b8874757606dfa5ad59d23a  backdoor/backdoor.py
 a2da96a060efdb37db4873f20dbeaef8a3ad02475a4c10faa2d7444b6f35e46e  backdoor/keylogger.py
 
-06caf88574e25df7cace75a2cfb40afcd8c1c3e98bec8397443a49bc8c742e90  resources/gibraltar.ico
-af8f4c9dbcac6dbfd1611d714f00dc5c52c30a10cb724ac7aa255b28d9f84f59  resources/gibraltar.jpg
-defbfe4b6aa4d743209956a6d0c21456a62d5f0bdbcab19c3bfb19727693539b  resources/malware_128x128.ico
+f8f4c9dbcac6dbfd1611d714f00dc5c52c30a10cb724ac7aa255b28d9f84f59  resources/gibraltar.jpg
+06caf88574e25df7cace75a2cfb40afcd8c1c3e98bec8397443a49bc8c742e90  resources/gibraltar128x128.ico
+defbfe4b6aa4d743209956a6d0c21456a62d5f0bdbcab19c3bfb19727693539b  resources/malware128x128.ico
 
-e265734c5a74375a53417993aa1fb3b436b6ae35ecbe10dc4c181e103db9ad6e  c2.py
+79d7847b60b0f0d2d7414c17775dfa5880718968d56590a0ec6d2e309594ba28  c2.py
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEERzyMmKGbO5ocRtk9reWeS1K/nZUFAmIJBnsACgkQreWeS1K/
+nZXE8A//ZrHeM7hh/ZyNJ/H2fY8PfeCMsyUVY9ZccBgT39YEUZRmD3u1uWT48mNA
+bcn+7OU/hOB5QjBep5APJ3xLY7UflDz7FXZBkahY0pBU6it6lPnsTOJ9pboWgdpu
+xXrLaBPTm9KLnT80HpUOxo3C1hBF5RXTFu/69J7MGHC5O1GWs0Kd2DgdNiRtXlQi
+7IKGE2z/bYKhV93dJunqj1wvPWX5aIka7Hnmrf+jysDRjybXCKnhzMdRnZ/LM66y
+EGatHT2lN+l3x4TDdJBqSpL2iQs86ftbGr1e+mr/gJ1uYas+DD1KPGyGAWrXvvAQ
+yfHXmwjTr/x2/X8nGiuXByoNjKfvkKwqwkVaCyL4vTQluXaqhe7g50F2JvDyQ3fA
+dsbZoUWuP1mdoxmhUCL0z7mh9HCCs4MEu09A3XoVJkPdict+Hgm3d8Ut6EgbFDLt
+1zNYUP0tLsSvnjIlSoI2t5FAPUZWprajLAwm/N2HQxs1ruSEd3NedtVvwiTQkAyb
+6fO0hK0SE0JfT0XwGN4Ogwc2qxmH0uPCdylBSKYRC5Ffk0lTWA5Jjyc/INNIpnFo
+AZt+uW69cU0i+4Mdnh7kA8jTNLMnJxf/GLGseoMpMPtbJQ5CPvuawssAbfc/XqQj
+ZBiwE2Ac6AsD3/vTp6cdEGF4ULFTQEMKFtEHXjdhohg0Whynyl4=
+=8Wnq
+-----END PGP SIGNATURE-----

