@@ -79,6 +79,8 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
     
     ===Windows Only===
     persistence *RegName* *filename*    --> Create Persistence In Registry
+                                            copies backdoor to ~/AppData/Roaming/filename
+                                            example: persistence Backdoor windows32.exe
     check                               --> Check If Has Administrator Privileges
 
 # Wine and Pyinstaller (Win version) Installation on Linux
