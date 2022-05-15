@@ -136,13 +136,13 @@ This will produce _./dist/backdoor.exe_
 ## Obfuscation using SFX Archive (Theory)
 
 The executable _backdoor.exe_ will be made to look like an image (jpg) file.
-By default Windows does not show file extensions (e.g. backdoor.exe will show in Windows Explorer as backdoor).
+By default, Windows does not show file extensions (e.g. backdoor.exe will show in Windows Explorer as backdoor).
 Hence, we will create an SFX archive name _wallpaper.jpg.exe_ which Windows Explorer will show as _wallpaper.jpg_.
 
 This will involve having an _image_ which we will also create an icon version of _.ico_ to assign the SFX archive.
 Making the executable appear to be an image.
 
-Of course this same method could be applied to audio, document or video file using an appopriate icon.
+Of course, this same method could be applied to audio, document or video file using an appropriate icon.
 
 ### NOTE: SFX Archive
 
@@ -192,7 +192,7 @@ https://user-images.githubusercontent.com/10171446/153578069-851d3896-67d0-465b-
 This will produce an SFX archive which looks like an image
 
 While inspecting the file will reveal it is an executable the file extension _.exe_ is concealed.
-Furthermore, if viewed from the Desktop cannot be differentiated between a 'real' image.
+Furthermore, if viewed from the Desktop the file cannot be differentiated from a 'real' image.
 
 ![image8](https://user-images.githubusercontent.com/10171446/153618884-601e9a7f-9bda-4fd5-a5a0-9808053160c5.PNG)
 
