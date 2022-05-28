@@ -126,6 +126,7 @@ or,
 ┌──(root💀kali)-[~]
 
 └─#
+
 	wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole ~/backdoor.py
     
 **alternatively** if an _icon_ has already been created,
