@@ -28,25 +28,24 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 ## Table of Contents  
 - [Usage Manuals](#usage-manuals)
-  * [C2 Manual](#c2-manual)
-  * [Session Manual](#session-manual)
-- [Wine and Pyinstaller (Win version) Installation on Linux](#wine-and-pyinstaller--win-version--installation-on-linux)
-  * [Environment Setup](#environment-setup)
-  * [Installing Dependencies](#installing-dependencies)
+  - [C2 Manual](#c2-manual)
+  - [Session Manual](#session-manual)
+- [Wine and Pyinstaller (Win version) Installation on Linux](#wine-and-pyinstaller-win-version-installation-on-linux)
+  - [Environment Setup](#environment-setup)
+  - [Installing Dependencies](#installing-dependencies)
 - [Backdoor Compilation and Obfuscation for Windows](#backdoor-compilation-and-obfuscation-for-windows)
-  * [Compile to Executable using Pyinstaller Linux](#compile-to-executable-using-pyinstaller-linux)
-  * [Compile to Executable using Pyinstaller (Win) under Wine](#compile-to-executable-using-pyinstaller--win--under-wine)
-  * [Obfuscation using SFX Archive (Theory)](#obfuscation-using-sfx-archive--theory-)
-    + [NOTE: SFX Archive](#note--sfx-archive)
-  * [Creating SFX Archive](#creating-sfx-archive)
-  * [Creating SFX Archive - Visual](#creating-sfx-archive---visual)
-  * [Task Manager](#task-manager)
+  - [Compile to Executable using Pyinstaller Linux](#compile-to-executable-using-pyinstaller-linux)
+  - [Compile to Executable using Pyinstaller (Win) under Wine](#compile-to-executable-using-pyinstaller-win-under-wine)
+  - [Obfuscation using SFX Archive (Theory)](#obfuscation-using-sfx-archive-theory)
+  - [Creating SFX Archive](#creating-sfx-archive)
+  - [Creating SFX Archive - Visual](#creating-sfx-archive---visual)
+  - [Task Manager](#task-manager)
 - [Preview Images](#preview-images)
-  * [Target Connection to C2 Server](#target-Connection-to-c2-server)
-  * [Interacting with Session](#interacting-with-session)
-  * [Test Commands on Target](#test-commands-on-target)
-  * [Session Options](#session-options)
-  * [Backgrounding and Killing Session](#backgrounding-and-killing-session)
+  - [Target Connection to C2 Server](#target-connection-to-c2-server)
+  - [Interacting with Session](#interacting-with-session)
+  - [Test Commands on Target](#test-commands-on-target)
+  - [Session Options](#session-options)
+  - [Backgrounding and Killing Session](#backgrounding-and-killing-session)
 
 
 # Usage Manuals
@@ -103,7 +102,7 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
     
 ## Installing Dependencies
 
-┌──(root💀kali)-[~/.wine/drive_c]
+┌──(root💀kali)-[~]
 
 └─# 
 
@@ -124,11 +123,14 @@ or,
 
 ## Compile to Executable using Pyinstaller (Win) under Wine
 
-    # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole ~/backdoor.py
+┌──(root💀kali)-[~]
+
+└─#
+	wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole ~/backdoor.py
     
 **alternatively** if an _icon_ has already been created,
     
-    # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --icon ~/malware_128x128.ico ~/backdoor.py
+	wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --icon ~/malware_128x128.ico ~/backdoor.py
     
 This will produce _./dist/backdoor.exe_
 
@@ -150,8 +152,12 @@ SFX archive is not the only method of obfuscating the executable.
 We can when compiling using _Pyinstaller_ add the argument _--add-data "/root/wallpaper.jpg;."_ with
 _--icon ~/wallpaper.ico_.
 
-    # wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --add-data "/root/wallpaper.jpg;." --icon ~/malware_128x128.ico ~/backdoor.py
-    # mv ./dist/_backdoor.exe_ ./dist/_wallpaper.jpg.exe_
+┌──(root💀kali)-[~]
+
+└─#
+
+    wine /root/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --add-data "/root/wallpaper.jpg;." --icon ~/malware_128x128.ico ~/backdoor.py
+    mv ./dist/_backdoor.exe_ ./dist/_wallpaper.jpg.exe_
 
 
 ## Creating SFX Archive
