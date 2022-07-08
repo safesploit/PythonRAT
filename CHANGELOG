@@ -1,0 +1,7 @@
+Changelog for PythonRAT
+-------------------
+
+1.0.0   (2015-02-16 12:32:56 +0100)
+  * Programmed Colour class
+  * Termcolor dependency no longer necessary
+  * Implemented a banner on launch of c2.py

