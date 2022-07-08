@@ -2,7 +2,7 @@
 
 **The MALWARE _PythonRAT_ is for EDUCATIONAL PURPOSES ONLY!!** 
 
-**Description**
+## Description
 
 PythonRAT is a Command and Control (C2) server which can control multiple machines running the Remote Administration Trojan (RAT) forming a botnet cluster which was written in Python3. 
 
@@ -10,8 +10,8 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 # Features
 
 - Integrated keylogger written as a class
-   * Can be started and stopped remotely
-   * With options to _dump_ or _overwrite_ the log file
+  - Can be started and stopped remotely
+  - With options to _dump_ or _overwrite_ the log file
 - Check privilege level (Administrator/User)
 - Spawn other programs
 - Download files from target
@@ -26,10 +26,11 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 - Remote shutdown of the backdoor _(executable is NOT safely removed)_
 
 
-## Table of Contents  
+# Table of Contents  
 - [Usage Manuals](#usage-manuals)
   - [C2 Manual](#c2-manual)
   - [Session Manual](#session-manual)
+- [Dependencies](#dependencies)
 - [Wine and Pyinstaller (Win version) Installation on Linux](#wine-and-pyinstaller-win-version-installation-on-linux)
   - [Environment Setup](#environment-setup)
   - [Installing Dependencies](#installing-dependencies)
@@ -46,7 +47,6 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
   - [Test Commands on Target](#test-commands-on-target)
   - [Session Options](#session-options)
   - [Backgrounding and Killing Session](#backgrounding-and-killing-session)
-
 
 # Usage Manuals
 ## C2 Manual
@@ -82,6 +82,19 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
                                             example: persistence Backdoor windows32.exe
     check                               --> Check If Has Administrator Privileges
 
+# Dependencies
+
+The C2 server relies on:
+
+    pip install pyautogui \
+                termcolor
+
+The backdoor relies on:
+
+    pip install pyinstaller \
+                pyautogui \
+                requests
+
 # Wine and Pyinstaller (Win version) Installation on Linux
 
 Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
@@ -91,8 +104,8 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
 ┌──(root💀kali)-[~/]
 
 └─# 
+
     sudo su
-    
     dpkg --add-architecture i386
     apt update
     apt install wine32 
@@ -107,10 +120,10 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
 └─# 
 
     cd /root/.wine/drive_c/Python27
-    wine python.exe -m pip install  pyinstaller
-                                    requests
-                                    pyautogui
-				    pynput
+    wine python.exe -m pip install  pyinstaller \
+                                    requests \ 
+                                    pyautogui \
+				                    pynput
 
 
 # Backdoor Compilation and Obfuscation for Windows
