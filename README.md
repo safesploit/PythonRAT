@@ -1,10 +1,12 @@
 # PythonRAT
 
-**The MALWARE _PythonRAT_ is for EDUCATIONAL PURPOSES ONLY!!** 
-
-## Description
-
 PythonRAT is a Command and Control (C2) server which can control multiple machines running the Remote Administration Trojan (RAT) forming a botnet cluster which was written in Python3. 
+
+PythonRAT was developed for **educational** purposes and continues to be developed as such!
+
+<p align="center">
+  <img width="367" alt="PythonRAT Banner" src="https://user-images.githubusercontent.com/10171446/178044012-1ad8b92b-024e-4902-9492-7f7b6b1e0761.png">
+</p>
 
 
 # Features
@@ -84,16 +86,16 @@ PythonRAT is a Command and Control (C2) server which can control multiple machin
 
 # Dependencies
 
-The C2 server relies on:
-
-    pip install pyautogui \
-                termcolor
+The C2 server has no _external dependencies_ as of _v0.9.2-alpha_.
 
 The backdoor relies on:
 
-    pip install pyinstaller \
-                pyautogui \
+    pip install pyautogui \
                 requests
+
+ - **PyAutoGUI** is required for the `screenshot()` function.
+ - **Requests** is required for the `download_url()` function.
+
 
 # Wine and Pyinstaller (Win version) Installation on Linux
 

