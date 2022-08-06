@@ -91,6 +91,7 @@ The C2 server has no _external dependencies_ as of _v0.9.2-alpha_.
 The backdoor relies on:
 
     pip install pyautogui \
+                pynput \
                 requests
 
  - **PyAutoGUI** is required for the `screenshot()` function.

