@@ -88,17 +88,22 @@ PythonRAT was developed for **educational** purposes and continues to be develop
 
 The C2 server has no _external dependencies_ as of _v0.9.2-alpha_.
 
-The backdoor relies on:
+The backdoor relies on the following as of v0.10.1-alpha:
 
-    pip install pyautogui \
+    pip install mss \
                 pynput \
                 requests
 
- - **PyAutoGUI** is required for the `screenshot()` function.
+ - **MSS** is required for the `screenshot()` function.
+ - **Pynput** is required for the `Keylogger` class.
  - **Requests** is required for the `download_url()` function.
 
 
+The below mentioned steps are for compiling the backdoor for deployment. 
+For those wishing to test the C2 server and backdoor interaction see [issue 1](https://github.com/safesploit/PythonRAT/issues/1#issuecomment-1210378473).
+
 # Wine and Pyinstaller (Win version) Installation on Linux
+
 
 Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
 
@@ -125,8 +130,8 @@ Python 2.7.14 Releases: https://www.python.org/downloads/release/python-2714/
     cd /root/.wine/drive_c/Python27
     wine python.exe -m pip install  pyinstaller \
                                     requests \ 
-                                    pyautogui \
-				                    pynput
+                                    mss \
+				    pynput
 
 
 # Backdoor Compilation and Obfuscation for Windows
