@@ -25,6 +25,7 @@ PythonRAT was developed for **educational** purposes and continues to be develop
 - Conceals infection by writing files in AppData (Windows)
 
 - Screenshot of the target's screen which is sent to server
+- Webcam capture
 - Remote shutdown of the backdoor _(executable is NOT safely removed)_
 
 
