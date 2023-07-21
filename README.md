@@ -67,7 +67,7 @@ PythonRAT was developed for **educational** purposes and continues to be develop
 
     quit                                --> Quit Session With The Target
     clear                               --> Clear The Screen
-    background                          --> Send Session With Target To Background
+    background / bg                     --> Send Session With Target To Background
     cd *Directory name*                 --> Changes Directory On Target System
     upload *file name*                  --> Upload File To The Target Machine From Working Dir 
     download *file name*                --> Download File From Target Machine
@@ -76,6 +76,7 @@ PythonRAT was developed for **educational** purposes and continues to be develop
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
     screenshot                          --> Takes screenshot and sends to server ./screenshots/
+    webcam                              --> Takes image with webcam and sends to ./images/
     start *programName*                 --> Spawn Program Using backdoor e.g. 'start notepad'
     remove_backdoor                     --> Removes backdoor from target!!!
     
