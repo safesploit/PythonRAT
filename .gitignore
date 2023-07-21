@@ -4,5 +4,5 @@ CHANGELOG.md
 client/__pycache__/*
 server/__pycache__/*
 server/certs
-server/.screenshots
+images/*
 screenshots
