@@ -75,8 +75,8 @@ PythonRAT was developed for **educational** purposes and continues to be develop
     keylog_start                        --> Start The Keylogger
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
-    screenshot                          --> Takes screenshot and sends to server ./screenshots/
-    webcam                              --> Takes image with webcam and sends to ./images/
+    screenshot                          --> Takes screenshot and sends to server ./images/screenshots/
+    webcam                              --> Takes image with webcam and sends to ./images/webcam/
     start *programName*                 --> Spawn Program Using backdoor e.g. 'start notepad'
     remove_backdoor                     --> Removes backdoor from target!!!
     
