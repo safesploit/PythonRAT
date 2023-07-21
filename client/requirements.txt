@@ -4,6 +4,7 @@
 # pip install pipreqs
 # pipreqs /path/to/project
 
+opencv-python==1.25.1
 PyAutoGUI==0.9.53
 pynput==1.7.6
 requests==2.28.0

